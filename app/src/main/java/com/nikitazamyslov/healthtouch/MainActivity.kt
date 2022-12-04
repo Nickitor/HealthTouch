@@ -1,12 +1,12 @@
 package com.nikitazamyslov.healthtouch
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import com.nikitazamyslov.healthtouch.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-@SuppressLint("CustomSplashScreen")
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding

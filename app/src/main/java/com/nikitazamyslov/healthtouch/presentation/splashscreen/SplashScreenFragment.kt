@@ -11,11 +11,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.nikitazamyslov.healthtouch.R
 import com.nikitazamyslov.healthtouch.databinding.FragmentSplashScreenBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @SuppressLint("CustomSplashScreen")
+@AndroidEntryPoint
 class SplashScreenFragment : Fragment() {
 
     private var _binding: FragmentSplashScreenBinding? = null

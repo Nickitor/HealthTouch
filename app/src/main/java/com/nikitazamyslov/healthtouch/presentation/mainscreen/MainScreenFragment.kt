@@ -5,19 +5,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.nikitazamyslov.healthtouch.databinding.FragmentMainScreenBinding
 import com.nikitazamyslov.healthtouch.presentation.mainscreen.adapter.banner.BannerListAdapter
 import com.nikitazamyslov.healthtouch.presentation.mainscreen.adapter.measurement.MeasurementListAdapter
-import com.nikitazamyslov.healthtouch.presentation.mainscreen.model.BannerUiModel
-import com.nikitazamyslov.healthtouch.presentation.mainscreen.model.MeasurementUiModel
-import com.nikitazamyslov.healthtouch.presentation.util.MeasurementStatus
+import com.nikitazamyslov.healthtouch.presentation.mainscreen.model.MainScreenUiModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainScreenFragment : Fragment() {
 
     private var _binding: FragmentMainScreenBinding? = null
     private val binding get() = _binding!!
 
-    private var adapter = BannerListAdapter()
+    private val viewModel: MainScreenViewModel by viewModels()
+
+    private var adapterBanner = BannerListAdapter()
 
     private var adapterMeasurement = MeasurementListAdapter()
 
@@ -31,24 +38,31 @@ class MainScreenFragment : Fragment() {
     ): View {
         _binding = FragmentMainScreenBinding.inflate(inflater, container, false)
         setRecyclerView()
+        setObservers()
         return binding.root
     }
 
     private fun setRecyclerView() {
-        binding.rvBanners.adapter = adapter
-        adapter.onClickListener = {}
-        adapter.submitList((1..1).map {
-            BannerUiModel(
-                it.toString(), "Title", "Subtitle",
-                "https://content.everydayresources.com/wp-content/uploads/2021/05/Best-Fitness-Apps-500x375.jpg"
-            )
-        })
+        binding.rvBanners.adapter = adapterBanner
+        adapterBanner.onClickListener = {}
 
         binding.rvMeasurement.adapter = adapterMeasurement
-        adapter.onClickListener = {}
-        adapterMeasurement.submitList((1..1).map {
-            MeasurementUiModel(it, "Today, at 6:55 a.m.", MeasurementStatus.Bad, 100, 100)
-        })
+        adapterBanner.onClickListener = {}
+    }
+
+    private fun setObservers() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.state.collect { state ->
+                    updateUi(state)
+                }
+            }
+        }
+    }
+
+    private fun updateUi(state: MainScreenUiModel) {
+        adapterBanner.submitList(state.bannerUiModel)
+        adapterMeasurement.submitList(state.measurementUiModel)
     }
 
     override fun onDestroyView() {

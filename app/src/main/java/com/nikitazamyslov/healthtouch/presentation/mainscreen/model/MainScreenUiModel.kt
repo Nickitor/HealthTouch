@@ -1,6 +1,6 @@
 package com.nikitazamyslov.healthtouch.presentation.mainscreen.model
 
 data class MainScreenUiModel(
-    val bannerUiModel: BannerUiModel,
-    val measurementUiModel: MeasurementUiModel,
+    val bannerUiModel: List<BannerUiModel>,
+    val measurementUiModel: List<MeasurementUiModel>,
 )
