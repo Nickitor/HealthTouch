@@ -38,7 +38,7 @@ class SplashScreenFragment : Fragment() {
                     binding.tvTitle.isVisible = true
                     binding.tvTitle.animate().translationY(-50.0f)
                     delay(2000)
-                    findNavController().navigate(R.id.action_splashScreenFragment_to_onBoardingFragment)
+                    findNavController().navigate(R.id.action_splashScreenFragment_to_mainScreenFragment)
                 }
             }
         }

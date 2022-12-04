@@ -1,15 +1,15 @@
-package com.nikitazamyslov.healthtouch.presentation.onboarding
+package com.nikitazamyslov.healthtouch.presentation.mainscreen
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.nikitazamyslov.healthtouch.databinding.FragmentOnBoardingBinding
+import com.nikitazamyslov.healthtouch.databinding.FragmentMainScreenBinding
 
-class OnBoardingFragment : Fragment() {
+class MainScreenFragment : Fragment() {
 
-    private var _binding: FragmentOnBoardingBinding? = null
+    private var _binding: FragmentMainScreenBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +20,7 @@ class OnBoardingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentOnBoardingBinding.inflate(inflater, container, false)
+        _binding = FragmentMainScreenBinding.inflate(inflater, container, false)
         return binding.root
     }
 
