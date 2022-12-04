@@ -1,6 +1,14 @@
 <resources>
     <string name="app_name">HealthTouch</string>
     <string name="logo_name">HealthTouch</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Main Screen -->
+    <string name="banner_recommendations_title">General recommendations</string>
+    <string name="banner_recommendations_subtitle">Eat at least one fresh apple every day. Drink more water and do sport.</string>
+    <string name="item_measurement_bpm">bpm</string>
+    <string name="item_measurement_hrv">hrv</string>
+    <string name="item_measurement_good">good</string>
+    <string name="item_measurement_normal">normal</string>
+    <string name="item_measurement_bad">bad</string>
+
 </resources>
