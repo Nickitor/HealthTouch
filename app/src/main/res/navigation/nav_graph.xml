@@ -23,5 +23,14 @@
         android:id="@+id/mainScreenFragment"
         android:name="com.nikitazamyslov.healthtouch.presentation.mainscreen.MainScreenFragment"
         android:label="fragment_main_screen"
-        tools:layout="@layout/fragment_main_screen" />
+        tools:layout="@layout/fragment_main_screen" >
+        <action
+            android:id="@+id/action_mainScreenFragment_to_measurementScreenFragment"
+            app:destination="@id/measurementScreenFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/measurementScreenFragment"
+        android:name="com.nikitazamyslov.healthtouch.presentation.measurement.MeasurementScreenFragment"
+        android:label="fragment_measurement_screen"
+        tools:layout="@layout/fragment_measurement_screen" />
 </navigation>

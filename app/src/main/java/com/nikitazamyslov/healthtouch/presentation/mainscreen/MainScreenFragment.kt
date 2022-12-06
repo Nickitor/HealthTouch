@@ -9,6 +9,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import com.nikitazamyslov.healthtouch.R
 import com.nikitazamyslov.healthtouch.databinding.FragmentMainScreenBinding
 import com.nikitazamyslov.healthtouch.presentation.mainscreen.adapter.banner.BannerListAdapter
 import com.nikitazamyslov.healthtouch.presentation.mainscreen.adapter.measurement.MeasurementListAdapter
@@ -39,6 +41,7 @@ class MainScreenFragment : Fragment() {
         _binding = FragmentMainScreenBinding.inflate(inflater, container, false)
         setRecyclerView()
         setObservers()
+        setListeners()
         return binding.root
     }
 
@@ -57,6 +60,12 @@ class MainScreenFragment : Fragment() {
                     updateUi(state)
                 }
             }
+        }
+    }
+
+    private fun setListeners() {
+        binding.ivScanButton.setOnClickListener {
+            findNavController().navigate(R.id.action_mainScreenFragment_to_measurementScreenFragment)
         }
     }
 
