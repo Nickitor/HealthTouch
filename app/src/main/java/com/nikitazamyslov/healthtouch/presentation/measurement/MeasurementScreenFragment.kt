@@ -10,6 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.nikitazamyslov.healthtouch.databinding.FragmentMeasurementScreenBinding
+import com.nikitazamyslov.healthtouch.presentation.measurement.model.MeasurementScreenUiModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -34,6 +35,11 @@ class MeasurementScreenFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.startMeasure()
+    }
+
     private fun setObservers() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -44,8 +50,17 @@ class MeasurementScreenFragment : Fragment() {
         }
     }
 
-    private fun updateUi(state: Unit) {
-        //TODO
+    private fun updateUi(state: MeasurementScreenUiModel) {
+        with(binding) {
+            tvBPM.text = state.bpm.toString()
+            progressBar.max = state.maxProgress
+            progressBar.setProgress(state.progress, true)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.stopMeasure()
     }
 
     override fun onDestroyView() {

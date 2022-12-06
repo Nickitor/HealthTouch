@@ -1,8 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.measurement.MeasurementScreenFragment">
 
-</FrameLayout>
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/shapeableImageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_pulse"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvBPM"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="1dp"
+        android:textColor="@color/white"
+        android:textSize="48sp"
+        app:fontFamily="@font/roboto_medium"
+        app:layout_constraintBottom_toBottomOf="@+id/ivHeart"
+        app:layout_constraintEnd_toEndOf="@+id/ivHeart"
+        app:layout_constraintStart_toStartOf="@+id/ivHeart"
+        app:layout_constraintTop_toTopOf="@+id/ivHeart"
+        app:layout_constraintVertical_bias="0.4"
+        tools:text="72" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/materialTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:elevation="1dp"
+        android:text="@string/item_measurement_bpm"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:fontFamily="@font/roboto"
+        app:layout_constraintEnd_toEndOf="@+id/tvBPM"
+        app:layout_constraintStart_toStartOf="@+id/tvBPM"
+        app:layout_constraintTop_toBottomOf="@+id/tvBPM" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivHeart"
+        android:layout_width="212dp"
+        android:layout_height="176dp"
+        android:src="@drawable/ic_heart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:progressBackgroundTint="@color/light_grey"
+        android:progressTint="@color/pink"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75"
+        tools:progress="15" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
