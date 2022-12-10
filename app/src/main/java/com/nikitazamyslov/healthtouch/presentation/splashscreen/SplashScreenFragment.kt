@@ -5,16 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.nikitazamyslov.healthtouch.R
 import com.nikitazamyslov.healthtouch.databinding.FragmentSplashScreenBinding
+import com.nikitazamyslov.healthtouch.presentation.util.getTimer
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
+
 
 @SuppressLint("CustomSplashScreen")
 @AndroidEntryPoint
@@ -22,6 +23,13 @@ class SplashScreenFragment : Fragment() {
 
     private var _binding: FragmentSplashScreenBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var heartAnimation: Animation
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        heartAnimation = AnimationUtils.loadAnimation(context, R.anim.heart_pulse_animation)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,23 +39,42 @@ class SplashScreenFragment : Fragment() {
         return binding.root
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
+        startAnimation()
+    }
 
-        binding.ivLogo.animate().scaleX(1.2f).scaleY(1.2f).withEndAction {
-            binding.ivLogo.animate().scaleX(1.0f).scaleY(1.0f).withEndAction {
-                viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                    binding.tvTitle.isVisible = true
-                    binding.tvTitle.animate().translationY(-50.0f)
-                    delay(2000)
-                    findNavController().navigate(R.id.action_splashScreenFragment_to_mainScreenFragment)
-                }
-            }
-        }
+    private fun startAnimation() {
+        binding.ivLogo.startAnimation(heartAnimation)
+        getTimer(
+            duration = DURATION_SPLASH_SCREEN,
+            completeAction = ::onCompleteAction,
+            scope = lifecycleScope
+        )
+    }
+
+    private fun stopAnimation() {
+        binding.ivLogo.clearAnimation()
+        heartAnimation.cancel()
+        heartAnimation.reset()
+    }
+
+    private fun onCompleteAction() {
+        stopAnimation()
+        findNavController().navigate(R.id.action_splashScreenFragment_to_mainScreenFragment)
+    }
+
+    override fun onPause() {
+        stopAnimation()
+        super.onPause()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private val DURATION_SPLASH_SCREEN = 3.seconds
     }
 }
