@@ -1,10 +1,12 @@
 [versions]
 lifecycle-version = '2.5.1'
 coroutines-version = "1.6.1"
-hilt-version = "2.43.2"
+hilt-version = "2.44.2"
 nav-version = "2.5.1"
-glide-version = "4.13.2"
+glide-version = "4.14.2"
 swiperefreshlayout-version = "1.1.0"
+rxjava2-version = "2.2.8"
+heartrateometer-version = "-SNAPSHOT"
 
 [libraries]
 lifecycle-viewmodel-ktx = { group = 'androidx.lifecycle', name = 'lifecycle-viewmodel-ktx', version.ref = 'lifecycle_version' }
@@ -23,6 +25,10 @@ glide = { group = 'com.github.bumptech.glide', name = 'glide', version.ref = 'gl
 glide-compiler = { group = 'com.github.bumptech.glide', name = 'compiler', version.ref = 'glide-version' }
 
 swiperefreshlayout = { group = 'androidx.swiperefreshlayout', name = 'swiperefreshlayout', version.ref = 'swiperefreshlayout-version' }
+
+rxjava2 = { group = 'io.reactivex.rxjava2', name = 'rxjava', version.ref = 'rxjava2-version' }
+
+heartrateometer = { group = 'com.github.kibotu', name = 'Heart-Rate-Ometer', version.ref = 'heartrateometer-version' }
 
 [bundles]
 lifecycle = ['lifecycle-viewmodel-ktx', 'lifecycle-runtime-ktx']

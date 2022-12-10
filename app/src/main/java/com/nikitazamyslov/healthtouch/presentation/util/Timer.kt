@@ -28,7 +28,9 @@ fun getTimer(
     initialDelay = initialDelay,
     duration = duration
 )
-    .onEach { tickAction() }
+    .onEach {
+        tickAction()
+    }
     .onCompletion {
         if (!coroutineContext.job.isCancelled) {
             completeAction()

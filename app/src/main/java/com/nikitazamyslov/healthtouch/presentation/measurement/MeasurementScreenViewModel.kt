@@ -34,6 +34,8 @@ class MeasurementScreenViewModel @Inject constructor(initState: MeasurementScree
     }
 
     fun startMeasure() {
+        stopMeasure()
+        state.value = state.value.copy(isStart = true)
         measure = getTimer(
             tickAction = ::oneTickHasPassed,
             duration = state.value.remainingSeconds,
@@ -41,11 +43,14 @@ class MeasurementScreenViewModel @Inject constructor(initState: MeasurementScree
         )
     }
 
+    fun updateBPM(bpm: Int) {
+        state.value = state.value.copy(bpm = bpm)
+    }
+
     private suspend fun oneTickHasPassed() {
         with(state) {
             emit(
                 value.copy(
-                    bpm = 70 + Random.nextInt(1, 10),
                     remainingSeconds = value.remainingSeconds - 1.seconds,
                     progress = value.progress + 1
                 )
@@ -54,12 +59,13 @@ class MeasurementScreenViewModel @Inject constructor(initState: MeasurementScree
     }
 
     fun stopMeasure() {
+        state.value = state.value.copy(isStart = false)
         viewModelScope.launch {
             measure?.cancel()
         }
     }
 
     companion object {
-        private val MEASUREMENT_DURATION = 30.seconds
+        private val MEASUREMENT_DURATION = 10.seconds
     }
 }

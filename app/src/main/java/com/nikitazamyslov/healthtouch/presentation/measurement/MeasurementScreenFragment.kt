@@ -1,9 +1,19 @@
 package com.nikitazamyslov.healthtouch.presentation.measurement
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.app.ActionBar.LayoutParams
+import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -12,7 +22,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.nikitazamyslov.healthtouch.databinding.FragmentMeasurementScreenBinding
 import com.nikitazamyslov.healthtouch.presentation.measurement.model.MeasurementScreenUiModel
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.launch
+import net.kibotu.heartrateometer.HeartRateOmeter
 
 @AndroidEntryPoint
 class MeasurementScreenFragment : Fragment() {
@@ -22,14 +34,24 @@ class MeasurementScreenFragment : Fragment() {
 
     private val viewModel: MeasurementScreenViewModel by viewModels()
 
+    var subscription: CompositeDisposable? = null
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) {}
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
         _binding = FragmentMeasurementScreenBinding.inflate(inflater, container, false)
         setObservers()
         return binding.root
@@ -37,7 +59,43 @@ class MeasurementScreenFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.startMeasure()
+        dispose()
+        subscription = CompositeDisposable()
+        checkPermissionAndStartMeasure()
+    }
+
+    private fun checkPermissionAndStartMeasure() {
+        when (PackageManager.PERMISSION_GRANTED) {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.CAMERA
+            ) -> {
+                startMeasure()
+            }
+            else -> {
+                requestPermissionLauncher.launch(
+                    Manifest.permission.CAMERA
+                )
+            }
+        }
+    }
+
+    private fun startMeasure() {
+        val bpmUpdates = HeartRateOmeter()
+            .withAverageAfterSeconds(WITH_AVERAGE_AFTER_SECONDS)
+            .setFingerDetectionListener { isPressed ->
+                if (isPressed) {
+                    if (!viewModel.state.value.isStart)
+                        viewModel.startMeasure()
+                } else {
+                    viewModel.stopMeasure()
+                }
+            }
+            .bpmUpdates(binding.preview)
+            .subscribe { bpm ->
+                viewModel.updateBPM(bpm.value)
+            }
+        subscription?.add(bpmUpdates)
     }
 
     private fun setObservers() {
@@ -59,12 +117,22 @@ class MeasurementScreenFragment : Fragment() {
     }
 
     override fun onPause() {
-        super.onPause()
+        dispose()
         viewModel.stopMeasure()
+        super.onPause()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun dispose() {
+        if (subscription?.isDisposed == false)
+            subscription?.dispose()
+    }
+
+    companion object {
+        private const val WITH_AVERAGE_AFTER_SECONDS = 3
     }
 }

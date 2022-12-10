@@ -8,4 +8,5 @@ data class MeasurementScreenUiModel @Inject constructor(
     val remainingSeconds: Duration,
     val progress: Int,
     val maxProgress: Int,
+    val isStart: Boolean
 )

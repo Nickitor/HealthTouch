@@ -27,5 +27,5 @@ class AppModule {
 
     @Provides
     fun provideMeasurementScreenUiModel(): MeasurementScreenUiModel =
-        MeasurementScreenUiModel(0, 0.seconds, 0, 0)
+        MeasurementScreenUiModel(0, 0.seconds, 0, 0, isStart = false)
 }
