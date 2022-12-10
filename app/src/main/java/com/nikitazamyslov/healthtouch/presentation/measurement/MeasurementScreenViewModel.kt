@@ -37,8 +37,8 @@ class MeasurementScreenViewModel @Inject constructor(initState: MeasurementScree
         stopMeasure()
         state.value = state.value.copy(isStart = true)
         measure = getTimer(
-            tickAction = ::oneTickHasPassed,
             duration = state.value.remainingSeconds,
+            tickAction = ::oneTickHasPassed,
             scope = viewModelScope
         )
     }
@@ -66,6 +66,6 @@ class MeasurementScreenViewModel @Inject constructor(initState: MeasurementScree
     }
 
     companion object {
-        private val MEASUREMENT_DURATION = 10.seconds
+        private val MEASUREMENT_DURATION = 20.seconds
     }
 }

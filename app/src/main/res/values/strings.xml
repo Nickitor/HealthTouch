@@ -5,10 +5,13 @@
     <!-- Main Screen -->
     <string name="banner_recommendations_title">General recommendations</string>
     <string name="banner_recommendations_subtitle">Eat at least one fresh apple every day. Drink more water and do sport.</string>
+
+    <!-- Measurement Screen -->
     <string name="item_measurement_bpm">bpm</string>
     <string name="item_measurement_hrv">hrv</string>
     <string name="item_measurement_good">good</string>
     <string name="item_measurement_normal">normal</string>
     <string name="item_measurement_bad">bad</string>
+    <string name="item_measurement_message">Please keep your finger straight</string>
 
 </resources>

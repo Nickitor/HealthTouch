@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -83,19 +84,23 @@ class MeasurementScreenFragment : Fragment() {
     private fun startMeasure() {
         val bpmUpdates = HeartRateOmeter()
             .withAverageAfterSeconds(WITH_AVERAGE_AFTER_SECONDS)
-            .setFingerDetectionListener { isPressed ->
-                if (isPressed) {
-                    if (!viewModel.state.value.isStart)
-                        viewModel.startMeasure()
-                } else {
-                    viewModel.stopMeasure()
-                }
-            }
+            .setFingerDetectionListener(::onFingerChange)
             .bpmUpdates(binding.preview)
             .subscribe { bpm ->
                 viewModel.updateBPM(bpm.value)
             }
         subscription?.add(bpmUpdates)
+    }
+
+    private fun onFingerChange(isPressed: Boolean) {
+        if (isPressed) {
+            binding.tvMessage.isVisible = false
+            if (!viewModel.state.value.isStart)
+                viewModel.startMeasure()
+        } else {
+            binding.tvMessage.isVisible = true
+            viewModel.stopMeasure()
+        }
     }
 
     private fun setObservers() {

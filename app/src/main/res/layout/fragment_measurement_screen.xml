@@ -42,7 +42,6 @@
         tools:text="72" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/materialTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
@@ -54,6 +53,22 @@
         app:layout_constraintEnd_toEndOf="@+id/tvBPM"
         app:layout_constraintStart_toStartOf="@+id/tvBPM"
         app:layout_constraintTop_toBottomOf="@+id/tvBPM" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="1dp"
+        android:gravity="center"
+        android:text="@string/item_measurement_message"
+        android:textColor="@color/red"
+        android:textSize="30sp"
+        android:visibility="gone"
+        app:fontFamily="@font/roboto"
+        app:layout_constraintBottom_toBottomOf="@+id/shapeableImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivHeart" />
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivHeart"
