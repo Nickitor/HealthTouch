@@ -45,6 +45,7 @@ dependencies {
     implementation libs.bundles.lifecycle
     implementation libs.bundles.coroutines
     implementation libs.bundles.navigation
+    implementation libs.bundles.room
     implementation libs.hilt.android
     implementation libs.glide
     implementation libs.swiperefreshlayout
@@ -53,4 +54,5 @@ dependencies {
 
     kapt libs.hilt.compiler
     kapt libs.glide.compiler
+    kapt libs.room.compiler
 }
