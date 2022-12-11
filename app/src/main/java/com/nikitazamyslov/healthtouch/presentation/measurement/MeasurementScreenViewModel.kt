@@ -75,7 +75,11 @@ class MeasurementScreenViewModel @Inject constructor(
     }
 
     fun stopMeasure() {
-        state.value = state.value.copy(isStart = false)
+        state.value = state.value.copy(
+            isStart = false,
+            remainingSeconds = MEASUREMENT_DURATION,
+            progress = 0
+        )
         viewModelScope.launch {
             measure?.cancel()
         }

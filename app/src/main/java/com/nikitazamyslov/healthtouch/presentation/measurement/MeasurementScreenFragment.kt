@@ -23,6 +23,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import com.nikitazamyslov.healthtouch.R
 import com.nikitazamyslov.healthtouch.databinding.FragmentMeasurementScreenBinding
@@ -31,8 +32,10 @@ import com.nikitazamyslov.healthtouch.presentation.splashscreen.SplashScreenFrag
 import com.nikitazamyslov.healthtouch.presentation.util.getTimer
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.kibotu.heartrateometer.HeartRateOmeter
+import kotlin.time.Duration.Companion.seconds
 
 @AndroidEntryPoint
 class MeasurementScreenFragment : Fragment() {
@@ -43,6 +46,8 @@ class MeasurementScreenFragment : Fragment() {
     private val viewModel: MeasurementScreenViewModel by viewModels()
 
     var subscription: CompositeDisposable? = null
+
+    var time = 3
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -78,7 +83,7 @@ class MeasurementScreenFragment : Fragment() {
             ContextCompat.checkSelfPermission(
                 requireContext(), Manifest.permission.CAMERA
             ) -> {
-                startMeasure()
+                startMeasureTimer()
             }
             else -> {
                 requestPermissionLauncher.launch(
@@ -86,6 +91,27 @@ class MeasurementScreenFragment : Fragment() {
                 )
             }
         }
+    }
+
+    private fun startMeasureTimer() {
+        getTimer(
+            duration = 4.seconds,
+            tickAction = ::oneTickHasPassed,
+            completeAction = ::onCompleteAction,
+            scope = lifecycleScope
+        )
+    }
+
+    private fun oneTickHasPassed() {
+        lifecycleScope.launch(Dispatchers.Main) {
+            binding.tvTimer.text = time.toString()
+            --time
+        }
+    }
+
+    private fun onCompleteAction() {
+        binding.tvTimer.isVisible = false
+        startMeasure()
     }
 
     private fun startMeasure() {
