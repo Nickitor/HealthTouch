@@ -5,14 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.nikitazamyslov.healthtouch.data.dao.MeasurementDao
 import com.nikitazamyslov.healthtouch.data.entity.MeasurementEntity
 import com.nikitazamyslov.healthtouch.presentation.measurement.model.MeasurementScreenUiModel
-import com.nikitazamyslov.healthtouch.presentation.util.MeasurementStatus
-import com.nikitazamyslov.healthtouch.presentation.util.ResourceHelper
-import com.nikitazamyslov.healthtouch.presentation.util.getTimer
+import com.nikitazamyslov.healthtouch.presentation.util.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
@@ -102,7 +101,7 @@ class MeasurementScreenViewModel @Inject constructor(
                 number = getLastNumber() + 1,
                 bpm = state.value.bpm,
                 hrv = 0,
-                date = "",
+                date = getCurrentDate(),
                 status = resourceHelper.getStringResource(getMeasurementStatus(state.value.bpm))
             )
         )
@@ -117,6 +116,10 @@ class MeasurementScreenViewModel @Inject constructor(
         if (last.isNotEmpty())
             return last[0].number
         return 0
+    }
+
+    private fun getCurrentDate(): String {
+        return getCurrentDateTime().toString("yyyy/MM/dd HH:mm:ss")
     }
 
     companion object {
