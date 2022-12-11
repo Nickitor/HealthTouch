@@ -1,21 +1,27 @@
 package com.nikitazamyslov.healthtouch.presentation.measurement
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import com.nikitazamyslov.healthtouch.data.dao.MeasurementDao
+import com.nikitazamyslov.healthtouch.data.entity.MeasurementEntity
 import com.nikitazamyslov.healthtouch.presentation.measurement.model.MeasurementScreenUiModel
-import com.nikitazamyslov.healthtouch.presentation.splashscreen.SplashScreenFragment
+import com.nikitazamyslov.healthtouch.presentation.util.MeasurementStatus
+import com.nikitazamyslov.healthtouch.presentation.util.ResourceHelper
 import com.nikitazamyslov.healthtouch.presentation.util.getTimer
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
-class MeasurementScreenViewModel @Inject constructor(initState: MeasurementScreenUiModel) :
+class MeasurementScreenViewModel @Inject constructor(
+    initState: MeasurementScreenUiModel,
+    private val itemDao: MeasurementDao,
+    private val resourceHelper: ResourceHelper
+) :
     ViewModel() {
 
     private var _state: MutableStateFlow<MeasurementScreenUiModel> =
@@ -41,6 +47,7 @@ class MeasurementScreenViewModel @Inject constructor(initState: MeasurementScree
         measure = getTimer(
             duration = state.value.remainingSeconds,
             tickAction = ::oneTickHasPassed,
+            completeAction = ::onCompleteAction,
             scope = viewModelScope
         )
     }
@@ -60,6 +67,14 @@ class MeasurementScreenViewModel @Inject constructor(initState: MeasurementScree
         }
     }
 
+    private suspend fun onCompleteAction() {
+        viewModelScope.launch(Dispatchers.IO) {
+            stopMeasure()
+            state.value = state.value.copy(isComplete = true)
+            insertMeasurement()
+        }
+    }
+
     fun stopMeasure() {
         state.value = state.value.copy(isStart = false)
         viewModelScope.launch {
@@ -67,7 +82,44 @@ class MeasurementScreenViewModel @Inject constructor(initState: MeasurementScree
         }
     }
 
+    private fun getMeasurementStatus(bpm: Int): Int {
+        return when (bpm) {
+            in 60..80 -> {
+                MeasurementStatus.Good.name
+            }
+            in 81..100 -> {
+                MeasurementStatus.Normal.name
+            }
+            else -> {
+                MeasurementStatus.Bad.name
+            }
+        }
+    }
+
+    private suspend fun insertMeasurement() {
+        insertItem(
+            MeasurementEntity(
+                number = getLastNumber() + 1,
+                bpm = state.value.bpm,
+                hrv = 0,
+                date = "",
+                status = resourceHelper.getStringResource(getMeasurementStatus(state.value.bpm))
+            )
+        )
+    }
+
+    private suspend fun insertItem(item: MeasurementEntity) {
+        itemDao.insert(item)
+    }
+
+    private suspend fun getLastNumber(): Int {
+        val last = itemDao.getLastItem()
+        if (last.isNotEmpty())
+            return last[0].number
+        return 0
+    }
+
     companion object {
-        private val MEASUREMENT_DURATION = 20.seconds
+        private val MEASUREMENT_DURATION = 10.seconds
     }
 }

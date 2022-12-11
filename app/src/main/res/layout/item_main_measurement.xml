@@ -41,7 +41,8 @@
                 android:textColor="@color/dark_grey"
                 android:textSize="32sp"
                 app:fontFamily="@font/roboto"
-                app:layout_constraintEnd_toStartOf="@+id/tvHRV"
+                app:layout_constraintEnd_toEndOf="@+id/vColor"
+                app:layout_constraintHorizontal_bias="0.25"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="125" />
@@ -66,9 +67,10 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/dark_grey"
                 android:textSize="32sp"
+                android:visibility="gone"
                 app:fontFamily="@font/roboto"
-                app:layout_constraintEnd_toStartOf="@+id/ivSmile"
-                app:layout_constraintStart_toEndOf="@+id/tvBPM"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tvBPM"
                 tools:text="68" />
 
@@ -79,6 +81,7 @@
                 android:text="@string/item_measurement_hrv"
                 android:textColor="@color/dark_grey"
                 android:textSize="15sp"
+                android:visibility="gone"
                 app:fontFamily="@font/roboto"
                 app:layout_constraintEnd_toEndOf="@+id/tvHRV"
                 app:layout_constraintStart_toStartOf="@+id/tvHRV"
@@ -88,12 +91,13 @@
                 android:id="@+id/ivSmile"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginBottom="3dp"
-                android:src="@drawable/icon_smile_good"
-                app:layout_constraintBottom_toBottomOf="@+id/tvHRV"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tvHRV"
-                app:layout_constraintTop_toTopOf="@+id/tvHRV" />
+                android:layout_marginEnd="50dp"
+                android:src="@drawable/ic_smile_good"
+                app:layout_constraintBottom_toBottomOf="@+id/tvBPM"
+                app:layout_constraintEnd_toEndOf="@+id/vColor"
+                app:layout_constraintHorizontal_bias="0.75"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tvBPM" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tvStatus"
@@ -105,7 +109,7 @@
                 app:fontFamily="@font/roboto"
                 app:layout_constraintEnd_toEndOf="@+id/ivSmile"
                 app:layout_constraintStart_toStartOf="@+id/ivSmile"
-                app:layout_constraintTop_toBottomOf="@+id/tvHRV" />
+                app:layout_constraintTop_toBottomOf="@+id/ivSmile" />
 
             <View
                 android:id="@+id/vColor"
@@ -124,12 +128,12 @@
         android:id="@+id/cvNumberColor"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:backgroundTint="@color/green"
         app:cardCornerRadius="50dp"
         app:cardElevation="5dp"
         app:layout_constraintBottom_toBottomOf="@+id/cvInfo"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/cvInfo">
+        app:layout_constraintTop_toTopOf="@+id/cvInfo"
+        tools:backgroundTint="@color/green">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvNumber"

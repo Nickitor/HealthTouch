@@ -17,20 +17,29 @@
         tools:layout="@layout/fragment_splash_screen">
         <action
             android:id="@+id/action_splashScreenFragment_to_mainScreenFragment"
-            app:destination="@id/mainScreenFragment" />
+            app:destination="@id/mainScreenFragment"
+            app:popUpTo="@id/splashScreenFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/mainScreenFragment"
         android:name="com.nikitazamyslov.healthtouch.presentation.mainscreen.MainScreenFragment"
         android:label="fragment_main_screen"
-        tools:layout="@layout/fragment_main_screen" >
+        tools:layout="@layout/fragment_main_screen">
         <action
             android:id="@+id/action_mainScreenFragment_to_measurementScreenFragment"
-            app:destination="@id/measurementScreenFragment" />
+            app:destination="@id/measurementScreenFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/measurementScreenFragment"
         android:name="com.nikitazamyslov.healthtouch.presentation.measurement.MeasurementScreenFragment"
         android:label="fragment_measurement_screen"
-        tools:layout="@layout/fragment_measurement_screen" />
+        tools:layout="@layout/fragment_measurement_screen">
+        <action
+            android:id="@+id/action_measurementScreenFragment_to_mainScreenFragment"
+            app:destination="@id/mainScreenFragment"
+            app:popUpTo="@id/mainScreenFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

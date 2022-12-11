@@ -13,6 +13,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -22,6 +23,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.nikitazamyslov.healthtouch.R
 import com.nikitazamyslov.healthtouch.databinding.FragmentMeasurementScreenBinding
 import com.nikitazamyslov.healthtouch.presentation.measurement.model.MeasurementScreenUiModel
@@ -42,10 +44,9 @@ class MeasurementScreenFragment : Fragment() {
 
     var subscription: CompositeDisposable? = null
 
-    private val requestPermissionLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) {}
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {}
 
     private lateinit var heartAnimation: Animation
 
@@ -56,8 +57,7 @@ class MeasurementScreenFragment : Fragment() {
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
@@ -76,8 +76,7 @@ class MeasurementScreenFragment : Fragment() {
     private fun checkPermissionAndStartMeasure() {
         when (PackageManager.PERMISSION_GRANTED) {
             ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.CAMERA
+                requireContext(), Manifest.permission.CAMERA
             ) -> {
                 startMeasure()
             }
@@ -90,10 +89,8 @@ class MeasurementScreenFragment : Fragment() {
     }
 
     private fun startMeasure() {
-        val bpmUpdates = HeartRateOmeter()
-            .withAverageAfterSeconds(WITH_AVERAGE_AFTER_SECONDS)
-            .setFingerDetectionListener(::onFingerChange)
-            .bpmUpdates(binding.preview)
+        val bpmUpdates = HeartRateOmeter().withAverageAfterSeconds(WITH_AVERAGE_AFTER_SECONDS)
+            .setFingerDetectionListener(::onFingerChange).bpmUpdates(binding.preview)
             .subscribe { bpm ->
                 viewModel.updateBPM(bpm.value)
             }
@@ -129,6 +126,15 @@ class MeasurementScreenFragment : Fragment() {
             tvBPM.text = state.bpm.toString()
             progressBar.max = state.maxProgress
             progressBar.setProgress(state.progress, true)
+
+            if (state.isComplete) {
+                Toast.makeText(
+                    requireContext(),
+                    "Congratulations! Measurement completed, see your results.",
+                    Toast.LENGTH_LONG
+                ).show()
+                findNavController().navigate(R.id.action_measurementScreenFragment_to_mainScreenFragment)
+            }
         }
     }
 
@@ -155,8 +161,7 @@ class MeasurementScreenFragment : Fragment() {
     }
 
     private fun dispose() {
-        if (subscription?.isDisposed == false)
-            subscription?.dispose()
+        if (subscription?.isDisposed == false) subscription?.dispose()
     }
 
     companion object {
