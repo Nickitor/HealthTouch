@@ -1,8 +1,10 @@
 package com.nikitazamyslov.healthtouch.presentation.measurement
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.nikitazamyslov.healthtouch.presentation.measurement.model.MeasurementScreenUiModel
+import com.nikitazamyslov.healthtouch.presentation.splashscreen.SplashScreenFragment
 import com.nikitazamyslov.healthtouch.presentation.util.getTimer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job

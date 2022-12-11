@@ -11,6 +11,8 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -20,8 +22,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.nikitazamyslov.healthtouch.R
 import com.nikitazamyslov.healthtouch.databinding.FragmentMeasurementScreenBinding
 import com.nikitazamyslov.healthtouch.presentation.measurement.model.MeasurementScreenUiModel
+import com.nikitazamyslov.healthtouch.presentation.splashscreen.SplashScreenFragment
+import com.nikitazamyslov.healthtouch.presentation.util.getTimer
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.launch
@@ -42,8 +47,11 @@ class MeasurementScreenFragment : Fragment() {
             ActivityResultContracts.RequestPermission()
         ) {}
 
+    private lateinit var heartAnimation: Animation
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        heartAnimation = AnimationUtils.loadAnimation(context, R.anim.heart_pulse_animation)
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -95,11 +103,14 @@ class MeasurementScreenFragment : Fragment() {
     private fun onFingerChange(isPressed: Boolean) {
         if (isPressed) {
             binding.tvMessage.isVisible = false
-            if (!viewModel.state.value.isStart)
+            if (!viewModel.state.value.isStart) {
                 viewModel.startMeasure()
+                startAnimation()
+            }
         } else {
             binding.tvMessage.isVisible = true
             viewModel.stopMeasure()
+            stopAnimation()
         }
     }
 
@@ -121,9 +132,20 @@ class MeasurementScreenFragment : Fragment() {
         }
     }
 
+    private fun startAnimation() {
+        binding.ivHeart.startAnimation(heartAnimation)
+    }
+
+    private fun stopAnimation() {
+        binding.ivHeart.clearAnimation()
+        heartAnimation.cancel()
+        heartAnimation.reset()
+    }
+
     override fun onPause() {
         dispose()
         viewModel.stopMeasure()
+        stopAnimation()
         super.onPause()
     }
 
