@@ -76,6 +76,6 @@ class SplashScreenFragment : Fragment() {
     }
 
     companion object {
-        private val DURATION_SPLASH_SCREEN = 3.seconds
+        private val DURATION_SPLASH_SCREEN = 2.seconds
     }
 }

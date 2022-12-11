@@ -116,10 +116,16 @@ class MeasurementScreenFragment : Fragment() {
 
     private fun startMeasure() {
         val bpmUpdates = HeartRateOmeter().withAverageAfterSeconds(WITH_AVERAGE_AFTER_SECONDS)
-            .setFingerDetectionListener(::onFingerChange).bpmUpdates(binding.preview)
-            .subscribe { bpm ->
+            .setFingerDetectionListener(::onFingerChange)
+            .bpmUpdates(binding.preview)
+            .subscribe({ bpm ->
+
+                if (bpm.value == 0) {
+                    return@subscribe
+                }
+
                 viewModel.updateBPM(bpm.value)
-            }
+            }, Throwable::printStackTrace)
         subscription?.add(bpmUpdates)
     }
 

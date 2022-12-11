@@ -11,7 +11,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import java.util.Calendar
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
@@ -76,9 +75,7 @@ class MeasurementScreenViewModel @Inject constructor(
 
     fun stopMeasure() {
         state.value = state.value.copy(
-            isStart = false,
-            remainingSeconds = MEASUREMENT_DURATION,
-            progress = 0
+            isStart = false
         )
         viewModelScope.launch {
             measure?.cancel()
@@ -127,6 +124,6 @@ class MeasurementScreenViewModel @Inject constructor(
     }
 
     companion object {
-        private val MEASUREMENT_DURATION = 10.seconds
+        private val MEASUREMENT_DURATION = 15.seconds
     }
 }
