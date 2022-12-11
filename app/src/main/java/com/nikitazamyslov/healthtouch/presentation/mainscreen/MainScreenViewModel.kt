@@ -8,6 +8,7 @@ import com.nikitazamyslov.healthtouch.presentation.mainscreen.model.MainScreenUi
 import com.nikitazamyslov.healthtouch.presentation.mainscreen.model.MeasurementUiModel
 import com.nikitazamyslov.healthtouch.presentation.util.MeasurementStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
-    private val getBannersUseCase: GetBannersUseCase, private val itemDao: MeasurementDao
+    private val getBannersUseCase: GetBannersUseCase,
+    private val itemDao: MeasurementDao
 ) : ViewModel() {
 
     private var _state: MutableStateFlow<MainScreenUiModel> = MutableStateFlow(
@@ -38,21 +40,30 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
+    fun removeItem(id: Int) {
+        deleteItem(id)
+    }
+
     private fun getItems() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             itemDao.getItems().collect { items ->
-                state.value = state.value.copy(
-                    measurementUiModel = items.map { item ->
-                        MeasurementUiModel(
-                            item.number,
-                            item.date,
-                            MeasurementStatus.Good,
-                            item.bpm,
-                            item.hrv,
-                        )
-                    }
-                )
+                state.value = state.value.copy(measurementUiModel = items.map { item ->
+                    MeasurementUiModel(
+                        item.id,
+                        item.number,
+                        item.date,
+                        MeasurementStatus.Good,
+                        item.bpm,
+                        item.hrv,
+                    )
+                })
             }
+        }
+    }
+
+    private fun deleteItem(id: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            itemDao.deleteById(id)
         }
     }
 }

@@ -9,6 +9,7 @@ import com.nikitazamyslov.healthtouch.presentation.measurement.model.Measurement
 import com.nikitazamyslov.healthtouch.presentation.splashscreen.SplashScreenFragment
 import com.nikitazamyslov.healthtouch.presentation.util.getTimer
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -67,7 +68,7 @@ class MeasurementScreenViewModel @Inject constructor(
     }
 
     private suspend fun onCompleteAction() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             stopMeasure()
             state.value = state.value.copy(isComplete = true)
             insertMeasurement()
@@ -84,7 +85,7 @@ class MeasurementScreenViewModel @Inject constructor(
     private suspend fun insertMeasurement() {
         insertItem(
             MeasurementEntity(
-                number = 0,
+                number = getLastNumber() + 1,
                 bpm = state.value.bpm,
                 hrv = 0,
                 date = "",
@@ -97,7 +98,14 @@ class MeasurementScreenViewModel @Inject constructor(
         itemDao.insert(item)
     }
 
+    private suspend fun getLastNumber(): Int {
+        val last = itemDao.getLastItem()
+        if (last.isNotEmpty())
+            return last[0].number
+        return 0
+    }
+
     companion object {
-        private val MEASUREMENT_DURATION = 5.seconds
+        private val MEASUREMENT_DURATION = 10.seconds
     }
 }
