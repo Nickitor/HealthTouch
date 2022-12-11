@@ -33,7 +33,7 @@
         android:elevation="1dp"
         android:textColor="@color/white"
         android:textSize="48sp"
-        app:fontFamily="@font/roboto"
+        app:fontFamily="@font/roboto_medium"
         app:layout_constraintBottom_toBottomOf="@+id/ivHeart"
         app:layout_constraintEnd_toEndOf="@+id/ivHeart"
         app:layout_constraintStart_toStartOf="@+id/ivHeart"
@@ -49,7 +49,7 @@
         android:text="@string/item_measurement_bpm"
         android:textColor="@color/white"
         android:textSize="20sp"
-        app:fontFamily="@font/roboto"
+        app:fontFamily="@font/roboto_medium"
         app:layout_constraintEnd_toEndOf="@+id/tvBPM"
         app:layout_constraintStart_toStartOf="@+id/tvBPM"
         app:layout_constraintTop_toBottomOf="@+id/tvBPM" />
@@ -72,14 +72,15 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivHeart"
-        android:layout_width="212dp"
-        android:layout_height="176dp"
-        android:src="@drawable/ic_heart"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:src="@drawable/logo_new"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintVertical_bias="0.247" />
 
     <ProgressBar
         android:id="@+id/progressBar"
