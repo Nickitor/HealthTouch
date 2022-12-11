@@ -61,6 +61,7 @@ class SplashScreenFragment : Fragment() {
 
     private fun onCompleteAction() {
         stopAnimation()
+        findNavController().clearBackStack(R.id.splashScreenFragment)
         findNavController().navigate(R.id.action_splashScreenFragment_to_mainScreenFragment)
     }
 

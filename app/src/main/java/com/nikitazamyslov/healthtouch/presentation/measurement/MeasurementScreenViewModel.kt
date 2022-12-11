@@ -3,6 +3,8 @@ package com.nikitazamyslov.healthtouch.presentation.measurement
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import com.nikitazamyslov.healthtouch.data.dao.MeasurementDao
+import com.nikitazamyslov.healthtouch.data.entity.MeasurementEntity
 import com.nikitazamyslov.healthtouch.presentation.measurement.model.MeasurementScreenUiModel
 import com.nikitazamyslov.healthtouch.presentation.splashscreen.SplashScreenFragment
 import com.nikitazamyslov.healthtouch.presentation.util.getTimer
@@ -15,7 +17,10 @@ import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
-class MeasurementScreenViewModel @Inject constructor(initState: MeasurementScreenUiModel) :
+class MeasurementScreenViewModel @Inject constructor(
+    initState: MeasurementScreenUiModel,
+    private val itemDao: MeasurementDao
+) :
     ViewModel() {
 
     private var _state: MutableStateFlow<MeasurementScreenUiModel> =
@@ -41,6 +46,7 @@ class MeasurementScreenViewModel @Inject constructor(initState: MeasurementScree
         measure = getTimer(
             duration = state.value.remainingSeconds,
             tickAction = ::oneTickHasPassed,
+            completeAction = ::onCompleteAction,
             scope = viewModelScope
         )
     }
@@ -60,6 +66,14 @@ class MeasurementScreenViewModel @Inject constructor(initState: MeasurementScree
         }
     }
 
+    private suspend fun onCompleteAction() {
+        viewModelScope.launch {
+            stopMeasure()
+            state.value = state.value.copy(isComplete = true)
+            insertMeasurement()
+        }
+    }
+
     fun stopMeasure() {
         state.value = state.value.copy(isStart = false)
         viewModelScope.launch {
@@ -67,7 +81,23 @@ class MeasurementScreenViewModel @Inject constructor(initState: MeasurementScree
         }
     }
 
+    private suspend fun insertMeasurement() {
+        insertItem(
+            MeasurementEntity(
+                number = 0,
+                bpm = state.value.bpm,
+                hrv = 0,
+                date = "",
+                status = ""
+            )
+        )
+    }
+
+    private suspend fun insertItem(item: MeasurementEntity) {
+        itemDao.insert(item)
+    }
+
     companion object {
-        private val MEASUREMENT_DURATION = 20.seconds
+        private val MEASUREMENT_DURATION = 5.seconds
     }
 }

@@ -22,6 +22,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.nikitazamyslov.healthtouch.R
 import com.nikitazamyslov.healthtouch.databinding.FragmentMeasurementScreenBinding
 import com.nikitazamyslov.healthtouch.presentation.measurement.model.MeasurementScreenUiModel
@@ -129,6 +130,10 @@ class MeasurementScreenFragment : Fragment() {
             tvBPM.text = state.bpm.toString()
             progressBar.max = state.maxProgress
             progressBar.setProgress(state.progress, true)
+
+            if (state.isComplete) {
+                findNavController().navigate(R.id.action_measurementScreenFragment_to_mainScreenFragment)
+            }
         }
     }
 
