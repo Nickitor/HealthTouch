@@ -1,12 +1,12 @@
 package com.nikitazamyslov.healthtouch.presentation.measurement
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.nikitazamyslov.healthtouch.data.dao.MeasurementDao
 import com.nikitazamyslov.healthtouch.data.entity.MeasurementEntity
 import com.nikitazamyslov.healthtouch.presentation.measurement.model.MeasurementScreenUiModel
-import com.nikitazamyslov.healthtouch.presentation.splashscreen.SplashScreenFragment
+import com.nikitazamyslov.healthtouch.presentation.util.MeasurementStatus
+import com.nikitazamyslov.healthtouch.presentation.util.ResourceHelper
 import com.nikitazamyslov.healthtouch.presentation.util.getTimer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -14,13 +14,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class MeasurementScreenViewModel @Inject constructor(
     initState: MeasurementScreenUiModel,
-    private val itemDao: MeasurementDao
+    private val itemDao: MeasurementDao,
+    private val resourceHelper: ResourceHelper
 ) :
     ViewModel() {
 
@@ -82,6 +82,20 @@ class MeasurementScreenViewModel @Inject constructor(
         }
     }
 
+    private fun getMeasurementStatus(bpm: Int): Int {
+        return when (bpm) {
+            in 60..80 -> {
+                MeasurementStatus.Good.name
+            }
+            in 81..100 -> {
+                MeasurementStatus.Normal.name
+            }
+            else -> {
+                MeasurementStatus.Bad.name
+            }
+        }
+    }
+
     private suspend fun insertMeasurement() {
         insertItem(
             MeasurementEntity(
@@ -89,7 +103,7 @@ class MeasurementScreenViewModel @Inject constructor(
                 bpm = state.value.bpm,
                 hrv = 0,
                 date = "",
-                status = ""
+                status = resourceHelper.getStringResource(getMeasurementStatus(state.value.bpm))
             )
         )
     }

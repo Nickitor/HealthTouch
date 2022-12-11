@@ -1,6 +1,5 @@
 package com.nikitazamyslov.healthtouch.presentation.mainscreen
 
-import android.graphics.Canvas
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
 import com.nikitazamyslov.healthtouch.R
 import com.nikitazamyslov.healthtouch.databinding.FragmentMainScreenBinding
 import com.nikitazamyslov.healthtouch.presentation.mainscreen.adapter.banner.BannerListAdapter

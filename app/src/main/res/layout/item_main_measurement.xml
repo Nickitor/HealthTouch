@@ -89,7 +89,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginBottom="3dp"
-                android:src="@drawable/icon_smile_good"
+                android:src="@drawable/ic_smile_good"
                 app:layout_constraintBottom_toBottomOf="@+id/tvHRV"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tvHRV"
@@ -124,12 +124,12 @@
         android:id="@+id/cvNumberColor"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:backgroundTint="@color/green"
         app:cardCornerRadius="50dp"
         app:cardElevation="5dp"
         app:layout_constraintBottom_toBottomOf="@+id/cvInfo"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/cvInfo">
+        app:layout_constraintTop_toTopOf="@+id/cvInfo"
+        tools:backgroundTint="@color/green">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvNumber"
